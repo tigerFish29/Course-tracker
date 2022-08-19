@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.spring.model.Course;
 
 @Repository
-public interface courseRepo extends CrudRepository<Course, Long> {
+public interface CourseRepo extends CrudRepository<Course, Long> {
     Iterable<Course> findAllByCategory(String category);
     
 }
