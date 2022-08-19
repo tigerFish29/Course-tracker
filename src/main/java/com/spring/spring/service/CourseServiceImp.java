@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.spring.exception.courseNotFound;
 import com.spring.spring.model.Course;
 import com.spring.spring.repo.CourseRepo;
 
@@ -41,23 +42,21 @@ public class CourseServiceImp implements CourseService {
         courseRepo.deleteAll();
     }
 
-    @Override
+    @Override 
     public void deleteCourseById(long courseId) {
+        courseRepo.findById(courseId).orElseThrow(() -> new courseNotFound("Course not found"));
         courseRepo.deleteById(courseId);
     }
-
+    
     @Override
-    public void updateCourse(long courseId, Course course) {
-       
-        courseRepo.findById(courseId).ifPresent(dbCourse -> {
-            dbCourse.setName(course.getName());
-            dbCourse.setCategory(course.getCategory());
-            dbCourse.setDescription(course.getDescription());
-            dbCourse.setRating(course.getRating());
-
-            courseRepo.save(dbCourse);
-        });
-        
+    public Course updateCourse(long courseId, Course course) {
+        Course exists = courseRepo.findById(courseId)
+        .orElseThrow(() -> new courseNotFound(String.format("Course with id %s could not be found ", courseId)));
+        exists.setName(course.getName());
+        exists.setCategory(course.getCategory());
+        exists.setDescription(course.getDescription());
+        exists.setRating(course.getRating());
+        return courseRepo.save(exists);
     }
     
 }
